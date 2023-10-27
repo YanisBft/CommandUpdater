@@ -3,6 +3,7 @@ package com.yanisbft.commandupdater.mixin;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContextBuilder;
 import com.mojang.brigadier.context.ParsedArgument;
+import com.mojang.brigadier.context.ParsedCommandNode;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.CommandNode;
 import com.yanisbft.commandupdater.CommandUpdater;
@@ -81,6 +82,15 @@ public abstract class AbstractCommandBlockScreenMixin extends Screen {
         ClientPlayNetworkHandler networkHandler = client.getNetworkHandler();
         CommandDispatcher<CommandSource> dispatcher = networkHandler.getCommandDispatcher();
         CommandContextBuilder<?> commandContext = dispatcher.parse(command, networkHandler.getCommandSource()).getContext();
+
+        ParsedCommandNode<?> originalNode = commandContext.getNodes().get(0);
+        String originalNodeName = originalNode.getNode().getName();
+        if (originalNode.getNode().getRedirect() != null) {
+            String realNodeName = originalNode.getNode().getRedirect().getName();
+            command = new StringBuilder(command).replace(originalNode.getRange().getStart(), originalNode.getRange().getEnd(), realNodeName).toString();
+        }
+
+        commandContext = dispatcher.parse(command, networkHandler.getCommandSource()).getContext();
         List<? extends ParsedArgument<?, ?>> args = commandContext.getArguments().values().stream().toList();
 
         for (int i = 0; i < args.size(); i++) {
@@ -125,6 +135,15 @@ public abstract class AbstractCommandBlockScreenMixin extends Screen {
         ClientPlayNetworkHandler networkHandler = client.getNetworkHandler();
         CommandDispatcher<CommandSource> dispatcher = networkHandler.getCommandDispatcher();
         CommandContextBuilder<?> commandContext = dispatcher.parse(command, networkHandler.getCommandSource()).getContext();
+
+        ParsedCommandNode<?> originalNode = commandContext.getNodes().get(0);
+        String originalNodeName = originalNode.getNode().getName();
+        if (originalNode.getNode().getRedirect() != null) {
+            String realNodeName = originalNode.getNode().getRedirect().getName();
+            command = new StringBuilder(command).replace(originalNode.getRange().getStart(), originalNode.getRange().getEnd(), realNodeName).toString();
+        }
+
+        commandContext = dispatcher.parse(command, networkHandler.getCommandSource()).getContext();
         List<? extends ParsedArgument<?, ?>> args = commandContext.getArguments().values().stream().toList();
 
         for (int i = 0; i < args.size(); i++) {
@@ -157,6 +176,16 @@ public abstract class AbstractCommandBlockScreenMixin extends Screen {
 
         ClientPlayNetworkHandler networkHandler = client.getNetworkHandler();
         CommandContextBuilder<?> commandContext = networkHandler.getCommandDispatcher().parse(command, networkHandler.getCommandSource()).getContext();
+
+
+        ParsedCommandNode<?> originalNode = commandContext.getNodes().get(0);
+        String originalNodeName = originalNode.getNode().getName();
+        if (originalNode.getNode().getRedirect() != null) {
+            String realNodeName = originalNode.getNode().getRedirect().getName();
+            command = new StringBuilder(command).replace(originalNode.getRange().getStart(), originalNode.getRange().getEnd(), realNodeName).toString();
+        }
+
+        commandContext = networkHandler.getCommandDispatcher().parse(command, networkHandler.getCommandSource()).getContext();
 
         for (ParsedArgument<?, ?> parsedArg : commandContext.getArguments().values()) {
 
