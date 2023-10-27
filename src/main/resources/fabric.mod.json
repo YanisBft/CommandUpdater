@@ -8,8 +8,9 @@
 		"YanisBft"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"homepage": "",
+		"sources": "https://github.com/YanisBft/CommandUpdater",
+		"issues": "https://github.com/YanisBft/CommandUpdater/issues"
 	},
 	"license": "LGPLv3",
 	"icon": "assets/commandupdater/icon.png",
