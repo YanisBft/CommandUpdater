@@ -9,6 +9,8 @@ public class NbtUpdaters {
     public static final NbtUpdater ACTIVE_EFFECTS = register(new EffectUpdater("ActiveEffects", "active_effects"));
     public static final NbtUpdater CUSTOM_POTION_EFFECTS = register(new EffectUpdater("CustomPotionEffects", "custom_potion_effects"));
     public static final NbtUpdater EFFECTS = register(new EffectUpdater("Effects", "effects"));
+    public static final NbtUpdater PRIMARY_EFFECT = register(new BeaconEffectUpdater("Primary", "primary_effect"));
+    public static final NbtUpdater SECONDARY_EFFECT = register(new BeaconEffectUpdater("Secondary", "secondary_effect"));
 
     public static void init() {
     }

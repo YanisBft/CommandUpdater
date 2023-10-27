@@ -16,6 +16,7 @@ import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.argument.*;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -166,6 +167,35 @@ public abstract class AbstractCommandBlockScreenMixin extends Screen {
                 }
 
                 String newArg = entityNbt.toString();
+                command = new StringBuilder(command).replace(parsedArg.getRange().getStart(), parsedArg.getRange().getEnd(), newArg).toString();
+                command = prefix ? "/" + command : command;
+                consoleCommandTextField.setText(command);
+            }
+
+            // item nbt
+            if (parsedArg.getResult() instanceof ItemStackArgument itemStackArg) {
+                NbtCompound itemNbt = ((ItemStackArgumentAccessor) itemStackArg).getNbt();
+
+                for (NbtUpdater nbtUpdater : NbtUpdaters.ALL) {
+                    nbtUpdater.update(itemNbt);
+                }
+
+                Identifier itemId = Registries.ITEM.getId(itemStackArg.getItem());
+                String newArg = itemId + itemNbt.toString();
+                command = new StringBuilder(command).replace(parsedArg.getRange().getStart(), parsedArg.getRange().getEnd(), newArg).toString();
+                command = prefix ? "/" + command : command;
+                consoleCommandTextField.setText(command);
+            }
+
+            // block nbt
+            if (parsedArg.getResult() instanceof BlockStateArgument blockStateArg) {
+                NbtCompound blockNbt = ((BlockStateArgumentAccessor) blockStateArg).getData();
+
+                for (NbtUpdater nbtUpdater : NbtUpdaters.ALL) {
+                    nbtUpdater.update(blockNbt);
+                }
+
+                String newArg = BlockArgumentParser.stringifyBlockState(blockStateArg.getBlockState()) + blockNbt.toString();
                 command = new StringBuilder(command).replace(parsedArg.getRange().getStart(), parsedArg.getRange().getEnd(), newArg).toString();
                 command = prefix ? "/" + command : command;
                 consoleCommandTextField.setText(command);
