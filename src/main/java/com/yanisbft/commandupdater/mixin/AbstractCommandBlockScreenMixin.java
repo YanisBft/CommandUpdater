@@ -83,11 +83,14 @@ public abstract class AbstractCommandBlockScreenMixin extends Screen {
         CommandDispatcher<CommandSource> dispatcher = networkHandler.getCommandDispatcher();
         CommandContextBuilder<?> commandContext = dispatcher.parse(command, networkHandler.getCommandSource()).getContext();
 
+        boolean minecraftPrefix = command.startsWith("minecraft:");
+
         ParsedCommandNode<?> originalNode = commandContext.getNodes().get(0);
         String originalNodeName = originalNode.getNode().getName();
         if (originalNode.getNode().getRedirect() != null) {
             String realNodeName = originalNode.getNode().getRedirect().getName();
             command = new StringBuilder(command).replace(originalNode.getRange().getStart(), originalNode.getRange().getEnd(), realNodeName).toString();
+            command = minecraftPrefix ? "minecraft:" + command : command;
         }
 
         commandContext = dispatcher.parse(command, networkHandler.getCommandSource()).getContext();
@@ -136,11 +139,14 @@ public abstract class AbstractCommandBlockScreenMixin extends Screen {
         CommandDispatcher<CommandSource> dispatcher = networkHandler.getCommandDispatcher();
         CommandContextBuilder<?> commandContext = dispatcher.parse(command, networkHandler.getCommandSource()).getContext();
 
+        boolean minecraftPrefix = command.startsWith("minecraft:");
+
         ParsedCommandNode<?> originalNode = commandContext.getNodes().get(0);
         String originalNodeName = originalNode.getNode().getName();
         if (originalNode.getNode().getRedirect() != null) {
             String realNodeName = originalNode.getNode().getRedirect().getName();
             command = new StringBuilder(command).replace(originalNode.getRange().getStart(), originalNode.getRange().getEnd(), realNodeName).toString();
+            command = minecraftPrefix ? "minecraft:" + command : command;
         }
 
         commandContext = dispatcher.parse(command, networkHandler.getCommandSource()).getContext();
@@ -177,12 +183,14 @@ public abstract class AbstractCommandBlockScreenMixin extends Screen {
         ClientPlayNetworkHandler networkHandler = client.getNetworkHandler();
         CommandContextBuilder<?> commandContext = networkHandler.getCommandDispatcher().parse(command, networkHandler.getCommandSource()).getContext();
 
+        boolean minecraftPrefix = command.startsWith("minecraft:");
 
         ParsedCommandNode<?> originalNode = commandContext.getNodes().get(0);
         String originalNodeName = originalNode.getNode().getName();
         if (originalNode.getNode().getRedirect() != null) {
             String realNodeName = originalNode.getNode().getRedirect().getName();
             command = new StringBuilder(command).replace(originalNode.getRange().getStart(), originalNode.getRange().getEnd(), realNodeName).toString();
+            command = minecraftPrefix ? "minecraft:" + command : command;
         }
 
         commandContext = networkHandler.getCommandDispatcher().parse(command, networkHandler.getCommandSource()).getContext();
