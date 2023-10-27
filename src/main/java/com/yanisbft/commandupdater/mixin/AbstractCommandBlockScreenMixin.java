@@ -7,6 +7,8 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.CommandNode;
 import com.yanisbft.commandupdater.CommandUpdater;
 import com.yanisbft.commandupdater.gui.IconButtonWidget;
+import com.yanisbft.commandupdater.nbt.NbtUpdater;
+import com.yanisbft.commandupdater.nbt.NbtUpdaters;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.AbstractCommandBlockScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -36,6 +38,7 @@ public abstract class AbstractCommandBlockScreenMixin extends Screen {
 
     private IconButtonWidget relativeCoordinatesButton;
     private IconButtonWidget absoluteCoordinatesButton;
+    private IconButtonWidget updateNbtButton;
 
     protected AbstractCommandBlockScreenMixin(Text title) {
         super(title);
@@ -53,6 +56,10 @@ public abstract class AbstractCommandBlockScreenMixin extends Screen {
         absoluteCoordinatesButton = addDrawableChild(new IconButtonWidget(x + 24, y, Text.translatable("command_block.button.absolute_coordinates"),
                 CommandUpdater.id("absolute_coordinates"), 15, 15,
                 button -> changeToAbsolute()));
+
+        updateNbtButton = addDrawableChild(new IconButtonWidget(x, y + 24, Text.translatable("command_block.button.update_nbt"),
+                CommandUpdater.id("update_nbt"), 15, 15,
+                button -> updateNbt()));
     }
 
     @Inject(method = "onCommandChanged", at = @At(value = "TAIL"))
@@ -62,6 +69,7 @@ public abstract class AbstractCommandBlockScreenMixin extends Screen {
 
         relativeCoordinatesButton.active = exceptions.isEmpty();
         absoluteCoordinatesButton.active = exceptions.isEmpty();
+        updateNbtButton.active = exceptions.isEmpty();
     }
 
     private void changeToRelative() {
@@ -140,5 +148,28 @@ public abstract class AbstractCommandBlockScreenMixin extends Screen {
         }
 
         return BigDecimal.valueOf(arg.toAbsoluteCoordinate(0)).stripTrailingZeros().toPlainString();
+    }
+
+    private void updateNbt() {
+        boolean prefix = consoleCommandTextField.getText().startsWith("/");
+        String command = prefix ? consoleCommandTextField.getText().substring(1) : consoleCommandTextField.getText();
+
+        ClientPlayNetworkHandler networkHandler = client.getNetworkHandler();
+        CommandContextBuilder<?> commandContext = networkHandler.getCommandDispatcher().parse(command, networkHandler.getCommandSource()).getContext();
+
+        for (ParsedArgument<?, ?> parsedArg : commandContext.getArguments().values()) {
+
+            // entity nbt
+            if (parsedArg.getResult() instanceof NbtCompound entityNbt) {
+                for (NbtUpdater nbtUpdater : NbtUpdaters.ALL) {
+                    nbtUpdater.update(entityNbt);
+                }
+
+                String newArg = entityNbt.toString();
+                command = new StringBuilder(command).replace(parsedArg.getRange().getStart(), parsedArg.getRange().getEnd(), newArg).toString();
+                command = prefix ? "/" + command : command;
+                consoleCommandTextField.setText(command);
+            }
+        }
     }
 }

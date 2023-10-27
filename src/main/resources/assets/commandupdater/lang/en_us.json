@@ -1,4 +1,5 @@
 {
   "command_block.button.relative_coordinates": "Change to relative coordinates",
-  "command_block.button.absolute_coordinates": "Change to absolute coordinates"
+  "command_block.button.absolute_coordinates": "Change to absolute coordinates",
+  "command_block.button.update_nbt": "Update obsolete NBT"
 }

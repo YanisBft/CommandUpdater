@@ -1,5 +1,6 @@
 package com.yanisbft.commandupdater;
 
+import com.yanisbft.commandupdater.nbt.NbtUpdaters;
 import net.fabricmc.api.ClientModInitializer;
 
 import net.minecraft.util.Identifier;
@@ -12,6 +13,7 @@ public class CommandUpdater implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
+		NbtUpdaters.init();
 	}
 
 	public static Identifier id(String path) {
