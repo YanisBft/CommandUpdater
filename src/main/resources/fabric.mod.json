@@ -1,0 +1,31 @@
+{
+	"schemaVersion": 1,
+	"id": "commandupdater",
+	"version": "${version}",
+	"name": "CommandUpdater",
+	"description": "A mod adding handful buttons to the command block interface, to update coordinates and NBT.",
+	"authors": [
+		"YanisBft"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "LGPLv3",
+	"icon": "assets/commandupdater/icon.png",
+	"environment": "client",
+	"entrypoints": {
+		"client": [
+			"com.yanisbft.commandupdater.CommandUpdater"
+		]
+	},
+	"mixins": [
+		"commandupdater.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.14.23",
+		"minecraft": "~1.20.2",
+		"java": ">=17",
+		"fabric-api": "*"
+	}
+}
