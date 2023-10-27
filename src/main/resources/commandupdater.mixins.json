@@ -3,6 +3,8 @@
 	"package": "com.yanisbft.commandupdater.mixin",
 	"compatibilityLevel": "JAVA_17",
 	"client": [
+		"AbstractCommandBlockScreenMixin",
+		"DefaultPosArgumentAccessor"
 	],
 	"injectors": {
 		"defaultRequire": 1
